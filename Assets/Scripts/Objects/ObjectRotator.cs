@@ -4,140 +4,163 @@ using UnityEngine;
 
 public class ObjectRotator : MonoBehaviour
 {
+    // 회전 방향 설정
+    public enum RotationAxis { X, Y, Z }
+
     [Header("회전 대상")]
-    [SerializeField] private Transform Rotator;
+    [SerializeField] private Transform rotator;
 
-    [Header("Rotation Axis")]
-    [SerializeField] private Vector3 rotationAxis = Vector3.forward;
-
-    [Header("각도 보간")]
-    [SerializeField] float degreeStep = 90f;
-    [SerializeField] float snapSpeed = 5f;
+    [Header("회전 설정")]
+    [SerializeField] private RotationAxis axis = RotationAxis.Z;        // 회전 방향
+    [SerializeField] private float sensitivity = 1f;                    // 민감도
+    [SerializeField] private float snapAngle = 90f;                     // 보간되는 각도 단위
+    [SerializeField] private float snapSpeed = 1f;                      // 보간 속도
 
     [Header("마테리얼")]
     [SerializeField] private Material enterMat;
     [SerializeField] private Material exitMat;
 
-    private float targetAngle;
-    private float sensitivity = 1f;
+    private float _currentAngle;            // 현재 누적된 각도
+    private Quaternion _targetRotation;     // 목표 각도
+    private Vector3 _chosenAxis;            // 선택 방향에 따른 축 벡터
 
-    private bool isCanDrag;         // 드래그 가능 여부
-    private bool isDragging;        // 드래그 중
-    private bool isSnapping;        // 보간 중
+    // z축 회전용 변수
+    private float _mouseStartAngle;
+    private float _baseRotation;
+
+    private bool _isCanDrag;         // 드래그 가능 여부
+    private bool _isDragging;        // 드래그 중
 
     private Vector2 prevDirection;
 
+    private void Start()
+    {
+        // 축에 따라 회전할 각도 설정
+        Vector3 currentEuler = rotator.transform.localEulerAngles;
+        _currentAngle = GetAngleFromAxis(axis, currentEuler);
+
+        // 목표 각도 초기화
+        _targetRotation = rotator.transform.localRotation;
+    }
+
     private void Update()
     {
-        // 마우스 입력
-        if (isCanDrag)
+        HandleInput();
+
+        if (_isDragging)
         {
-            if (Input.GetMouseButtonDown(0))
-                StartDrag();
+            RotateByMouse();
         }
-        // 마우스 입력 끝
+        else
+        {
+            // 각도 보간
+            rotator.transform.localRotation = Quaternion.Slerp(
+                rotator.transform.localRotation,
+                _targetRotation,
+                Time.deltaTime * snapSpeed
+                );
+        }
+    }
+
+    private void HandleInput()
+    {
+        if (_isCanDrag)
+        {
+            // 마우스 입력 시작
+            if (Input.GetMouseButtonDown(0))
+            {
+                _isDragging = true;
+
+                if (axis == RotationAxis.Z)
+                {
+                    // z축 회전은 클릭 시점의 원형 각도를 기록
+                    _mouseStartAngle = GetMouseAngle();
+                    _baseRotation = rotator.transform.localEulerAngles.z;
+                }
+            }
+        }
+        // 마우스 입력 종료
         if (Input.GetMouseButtonUp(0))
         {
-            EndDrag();
+            _isDragging = false;
+            _isCanDrag = false;
+
+            // 가장 가까운 보간 각도 계산
+            float snappedAngle = Mathf.Round(_currentAngle / snapAngle) * snapAngle;
+            _targetRotation = CreateRotationFromAxis(axis, snappedAngle);
+
+            // 값 동기화
+            _currentAngle = snappedAngle;
         }
-
-        // 마우스 드래그
-        if (isDragging)
-            DragRotate();
-
-        if (isSnapping)
-            SnapToTarget();
-    }
-
-    private void StartDrag()
-    {
-        Vector2 mouseWorldPos = GetMouseWorldPos();
-        prevDirection = mouseWorldPos - (Vector2)Rotator.transform.position;
-
-        isDragging = true;
-        isSnapping = false;
-    }
-
-    private void EndDrag()
-    {
-        isDragging = false;
-        isCanDrag = false;
-        SetSnapTarget();
-        isSnapping = true;
     }
 
     /// <summary>
-    /// 드래그로 물체 회전
+    /// 마우스 입력을 받아 물체 회전
     /// </summary>
-    private void DragRotate()
+    private void RotateByMouse()
     {
-        Vector2 mouseWorldPos = GetMouseWorldPos();
-        Vector2 currentDirection = mouseWorldPos - (Vector2)transform.position;
-
-        if (currentDirection.sqrMagnitude < 0.001f || prevDirection.sqrMagnitude < 0.001f)
-            return;
-
-        float angle = Vector2.SignedAngle(prevDirection, currentDirection);
-        Rotator.transform.Rotate(rotationAxis, angle * sensitivity, Space.Self);
-
-        prevDirection = currentDirection;
-    }
-
-    /// <summary>
-    /// 목표 각도로 보간
-    /// </summary>
-    private void SnapToTarget()
-    {
-        float currentZ = NormalizeAngle(transform.localEulerAngles.z);
-        float snappingZ = Mathf.LerpAngle(currentZ, targetAngle, Time.deltaTime * snapSpeed);
-
-        transform.localEulerAngles = new Vector3(0, 0, snappingZ);
-
-        if (Mathf.Abs(Mathf.DeltaAngle(snappingZ, targetAngle)) < 0.1f)
+        if (axis == RotationAxis.X)         // x축을 회전시킬 때
         {
-            transform.localEulerAngles = new Vector3(0, 0, targetAngle);
-            isSnapping = false;
+            float mouseY = Input.GetAxis("Mouse Y") * sensitivity;
+            _currentAngle += mouseY;
         }
+        else if (axis == RotationAxis.Y)    // y축을 회전시킬 때
+        {
+            float mouseX = Input.GetAxis("Mouse X") * sensitivity;
+            _currentAngle += mouseX;
+        }
+        else if (axis == RotationAxis.Z)    // z축을 회전시킬 때
+        {
+            float currentMouseAngle = GetMouseAngle();
+            float angleDifference = currentMouseAngle - _mouseStartAngle;
+            _currentAngle = _baseRotation + angleDifference;
+        }
+
+        rotator.transform.localRotation = CreateRotationFromAxis(axis, _currentAngle);
     }
 
     /// <summary>
-    /// 보간될 각도 반환
+    /// 마우스 위치를 각도로 변환 (Z축 전용)
     /// </summary>
-    private void SetSnapTarget()
+    private float GetMouseAngle()
     {
-        float currentZ = NormalizeAngle(transform.localEulerAngles.z);
-        targetAngle = Mathf.Round(currentZ / degreeStep) * degreeStep;
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
+        Vector2 direction = (Vector2)Input.mousePosition - (Vector2)screenPos;
+        return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
     }
 
     /// <summary>
-    /// 각도 보정
+    /// 축에 따라 현재 각도 추출
     /// </summary>
-    /// <param name="angle"> 트랜스폼 각도 </param>
-    /// <returns> 보정된 각도 </returns>
-    private float NormalizeAngle(float angle)
+    private float GetAngleFromAxis(RotationAxis targetAxis, Vector3 euler)
     {
-        angle %= 360f;
-
-        if (angle > 180f) 
-            angle -= 360f;
-
-        return angle;
+        return targetAxis == RotationAxis.X ? euler.x :
+               targetAxis == RotationAxis.Y ? euler.y : euler.z;
     }
 
     /// <summary>
-    /// 마우스 포지션 값 산출
+    /// 축에 따른 Quaternion 생성
     /// </summary>
-    /// <returns> 월드에 적용되는 마우스 포지션 </returns>
-    private Vector2 GetMouseWorldPos()
+    /// <param name="targetAxis"> 축 설정 </param>
+    /// <param name="angle"> 누적된 각도 </param>
+    /// <returns> 각 축의 값에 각도 설정 </returns>
+    private Quaternion CreateRotationFromAxis(RotationAxis targetAxis, float angle)
     {
-        Vector3 mouseScreenPos = Input.mousePosition;
-        mouseScreenPos.z = Mathf.Abs(Camera.main.transform.position.z);
-        return Camera.main.ScreenToWorldPoint(mouseScreenPos);
+        switch (targetAxis)
+        {
+            case RotationAxis.X: return Quaternion.Euler(angle, 0, 0);
+            case RotationAxis.Y: return Quaternion.Euler(0, angle, 0);
+            case RotationAxis.Z: return Quaternion.Euler(0, 0, angle);
+            default: return Quaternion.identity;
+        }
     }
 
     private void OnMouseEnter()
     {
-        isCanDrag = true;
+        _isCanDrag = true;
+
+        Renderer renderer = GetComponent<Renderer>();
+        ChangeColor(renderer, enterMat);
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -149,7 +172,8 @@ public class ObjectRotator : MonoBehaviour
 
     private void OnMouseExit()
     {
-        isCanDrag = false;
+        Renderer renderer = GetComponent<Renderer>();
+        ChangeColor(renderer, exitMat);
 
         for (int i = 0; i < transform.childCount; i++)
         {
