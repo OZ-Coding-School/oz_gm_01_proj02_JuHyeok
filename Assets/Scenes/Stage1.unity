@@ -16526,6 +16526,10 @@ PrefabInstance:
       value: HideNode
       objectReference: {fileID: 0}
     - target: {fileID: 6072470724707386269, guid: 00bfbbc57d7324d409ed9faa1e11cebb, type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6072470724707386269, guid: 00bfbbc57d7324d409ed9faa1e11cebb, type: 3}
       propertyPath: neighborNodes.Array.data[0]
       value: 
       objectReference: {fileID: 706907501}
