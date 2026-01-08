@@ -52,7 +52,7 @@ public class Node : MonoBehaviour
     // 노드 연결 확인 기즈모
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.black;
 
         foreach (var neighbor in neighborNodes)
         {
