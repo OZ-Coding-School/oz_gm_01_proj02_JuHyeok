@@ -8,9 +8,25 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 3f;
     private bool isMoving = false;
 
+    // 초기 회전값
+    private Quaternion initialRot;
+
+    private void Start()
+    {
+        initialRot = transform.rotation;
+    }
+
     private void Update()
     {
         ClickToMove();
+    }
+
+    private void LateUpdate()
+    {
+        float currentY = transform.localEulerAngles.y;
+
+        // 회전값 동결
+        transform.rotation = Quaternion.Euler(initialRot.eulerAngles.x, currentY, initialRot.eulerAngles.z);
     }
 
     /// <summary>
