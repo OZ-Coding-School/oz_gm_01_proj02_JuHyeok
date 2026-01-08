@@ -16,7 +16,7 @@ public class Node : MonoBehaviour
     public Node illusionNeighbor;           // 착시로 연결되는 노드
 
     // 캐릭터가 설 노드 중앙값
-    public Vector3 walkTarget => transform.position + Vector3.up * 0.5f;
+    public Vector3 walkTarget => transform.position + Vector3.up * 1f;
 
     /// <summary>
     /// 주변 노드 탐색, 이웃 노드 리스트에 할당
@@ -57,7 +57,7 @@ public class Node : MonoBehaviour
         foreach (var neighbor in neighborNodes)
         {
             if (neighbor != null)
-                Gizmos.DrawLine(transform.position + Vector3.up * 0.5f, neighbor.transform.position + Vector3.up * 0.5f);
+                Gizmos.DrawLine(transform.position + Vector3.up * 1f, neighbor.transform.position + Vector3.up * 1f);
         }
     }
     // 이동 가능 여부 확인 기즈모
