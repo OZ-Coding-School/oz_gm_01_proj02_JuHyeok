@@ -34,6 +34,18 @@ public static class PathManager
                     queue.Enqueue(neighbor);
                 }
             }
+
+            // 착시 연결 노드가 있는 경우 이웃으로 간주
+            if (currentNode.illusionNeighbor != null && currentNode.illusionNeighbor.isWalkable)
+            {
+                Node illusion = currentNode.illusionNeighbor;
+
+                if (!comeFrom.ContainsKey(illusion))
+                {
+                    comeFrom[illusion] = currentNode;
+                    queue.Enqueue(illusion);
+                }
+            }
         }
 
         // 경로 재구성
