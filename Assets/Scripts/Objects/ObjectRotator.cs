@@ -7,6 +7,8 @@ public class ObjectRotator : MonoBehaviour
     // 회전 방향 설정
     public enum RotationAxis { X, Y, Z }
 
+    public IllusionManager illusionManager;
+
     [Header("회전 대상")]
     [SerializeField] private Transform rotator;
 
@@ -22,16 +24,14 @@ public class ObjectRotator : MonoBehaviour
 
     private float _currentAngle;            // 현재 누적된 각도
     private Quaternion _targetRotation;     // 목표 각도
-    private Vector3 _chosenAxis;            // 선택 방향에 따른 축 벡터
 
     // z축 회전용 변수
     private float _mouseStartAngle;
     private float _baseRotation;
 
-    private bool _isCanDrag;         // 드래그 가능 여부
-    private bool _isDragging;        // 드래그 중
-
-    private Vector2 prevDirection;
+    private bool _isCanDrag;            // 드래그 가능 여부
+    private bool _isDragging;           // 드래그 중
+    private bool _needsPathUpdate;      // 경로 업데이트 여부
 
     private void Start()
     {
@@ -59,6 +59,19 @@ public class ObjectRotator : MonoBehaviour
                 _targetRotation,
                 Time.deltaTime * snapSpeed
                 );
+
+            if (_needsPathUpdate && Quaternion.Angle(rotator.transform.localRotation, _targetRotation) < 0.1f)
+            {
+                // 위치 고정
+                rotator.transform.localRotation = _targetRotation;
+                _needsPathUpdate = false;
+
+                // 착시 노드 연결
+                if (illusionManager != null)
+                {
+                    illusionManager.UpdateIllusionPaths();
+                }
+            }
         }
     }
 
@@ -91,6 +104,14 @@ public class ObjectRotator : MonoBehaviour
 
             // 값 동기화
             _currentAngle = snappedAngle;
+
+            _needsPathUpdate = true;
+
+            // 기존 착시 연결 제거
+            if (illusionManager != null)
+            {
+                illusionManager.ResetIllusionPaths();
+            }
         }
     }
 
