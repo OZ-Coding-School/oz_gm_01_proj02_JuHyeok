@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum NodeType { Normal, Illusion }
+
 public class Node : MonoBehaviour
 {
+
     [Header("노드 정보")]
     public bool isWalkable = true;
     public float stepCost = 1f;
+    public NodeType type = NodeType.Normal;
 
     [Header("노드 연결")]
     public List<Node> neighborNodes = new List<Node>();

@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public Node currentNode;
-    [SerializeField] private float moveSpeed = 3f;
+    private float moveSpeed;
+    [SerializeField] private float normalSpeed = 3f;
+    [SerializeField] private float illusionSpeed = 27f;
     private bool isMoving = false;
 
     // 초기 회전값
@@ -70,8 +72,12 @@ public class PlayerMovement : MonoBehaviour
 
         foreach (Node nextNode in path)
         {
+            NodeType type = nextNode.type;
+
             // 목표 지점 설정
             Vector3 targetPos = nextNode.walkTarget;
+
+            moveSpeed = (type != NodeType.Illusion) ? normalSpeed : illusionSpeed;
 
             while (Vector3.Distance(transform.position, targetPos) > 0.05f)
             {
