@@ -18,6 +18,11 @@ public class ObjectRotator : MonoBehaviour
     [SerializeField] private float snapAngle = 90f;                     // 보간되는 각도 단위
     [SerializeField] private float snapSpeed = 1f;                      // 보간 속도
 
+    [Header("잠금 설정")]
+    [SerializeField] private Vector3 targetPos;                       // 잠금 연출을 위한 목표 위치
+    [SerializeField] private float lockSpeed = 1f;                      // 잠금 속도
+    private Vector3 originPos;                                        // 원위치 저장 변수
+
     [Header("마테리얼")]
     [SerializeField] private Material enterMat;
     [SerializeField] private Material exitMat;
@@ -41,11 +46,17 @@ public class ObjectRotator : MonoBehaviour
 
         // 목표 각도 초기화
         _targetRotation = rotator.transform.localRotation;
+
+        originPos = this.transform.position;
     }
 
     private void Update()
     {
         HandleInput();
+
+        Vector3 targetposition = IsCharacterOnRotator() ? targetPos : originPos;
+
+        transform.position = Vector3.Lerp(transform.position, targetposition, lockSpeed * Time.deltaTime);
 
         if (_isDragging)
         {
@@ -53,25 +64,7 @@ public class ObjectRotator : MonoBehaviour
         }
         else
         {
-            // 각도 보간
-            rotator.transform.localRotation = Quaternion.Slerp(
-                rotator.transform.localRotation,
-                _targetRotation,
-                Time.deltaTime * snapSpeed
-                );
-
-            if (_needsPathUpdate && Quaternion.Angle(rotator.transform.localRotation, _targetRotation) < 0.1f)
-            {
-                // 위치 고정
-                rotator.transform.localRotation = _targetRotation;
-                _needsPathUpdate = false;
-
-                // 착시 노드 연결
-                if (illusionManager != null)
-                {
-                    illusionManager.UpdateIllusionPaths();
-                }
-            }
+            SnapToTarget();
         }
     }
 
@@ -82,6 +75,8 @@ public class ObjectRotator : MonoBehaviour
             // 마우스 입력 시작
             if (Input.GetMouseButtonDown(0))
             {
+                if (IsCharacterOnRotator() && axis == RotationAxis.Z) return;
+
                 _isDragging = true;
 
                 if (axis == RotationAxis.Z)
@@ -140,6 +135,44 @@ public class ObjectRotator : MonoBehaviour
         rotator.transform.localRotation = CreateRotationFromAxis(axis, _currentAngle);
     }
 
+    private void SnapToTarget()
+    {
+        // 각도 보간
+        rotator.transform.localRotation = Quaternion.Slerp(
+            rotator.transform.localRotation,
+            _targetRotation,
+            Time.deltaTime * snapSpeed
+            );
+
+        if (_needsPathUpdate && Quaternion.Angle(rotator.transform.localRotation, _targetRotation) < 0.1f)
+        {
+            // 위치 고정
+            rotator.transform.localRotation = _targetRotation;
+            _needsPathUpdate = false;
+
+            // 착시 노드 연결
+            if (illusionManager != null)
+            {
+                illusionManager.UpdateIllusionPaths();
+            }
+        }
+    }
+
+    /// <summary>
+    /// 캐릭터가 회전 발판 위에 서있는지 여부
+    /// </summary>
+    /// <returns></returns>
+    private bool IsCharacterOnRotator()
+    {
+        PlayerMovement player = FindObjectOfType<PlayerMovement>();
+
+        if (player != null && player.currentNode != null)
+        {
+            return player.currentNode.transform.IsChildOf(rotator.GetChild(0));
+        }
+        return false;
+    }
+
     /// <summary>
     /// 마우스 위치를 각도로 변환 (Z축 전용)
     /// </summary>
@@ -180,32 +213,21 @@ public class ObjectRotator : MonoBehaviour
     {
         _isCanDrag = true;
 
-        Renderer renderer = GetComponent<Renderer>();
-        ChangeColor(renderer, enterMat);
-
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            Renderer childColor = transform.GetChild(i).GetComponent<Renderer>();
-
-            ChangeColor(childColor, enterMat);
-        }
+        ChangeColor(enterMat);
     }
 
     private void OnMouseExit()
     {
-        Renderer renderer = GetComponent<Renderer>();
-        ChangeColor(renderer, exitMat);
+        ChangeColor(exitMat);
+    }
 
+    private void ChangeColor(Material material)
+    {
         for (int i = 0; i < transform.childCount; i++)
         {
             Renderer childColor = transform.GetChild(i).GetComponent<Renderer>();
 
-            ChangeColor(childColor, exitMat);
+            childColor.material = material;
         }
-    }
-
-    private void ChangeColor(Renderer renderer, Material material)
-    {
-        renderer.material = material;
     }
 }

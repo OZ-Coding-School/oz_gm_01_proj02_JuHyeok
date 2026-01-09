@@ -72,12 +72,12 @@ public class PlayerMovement : MonoBehaviour
 
         foreach (Node nextNode in path)
         {
-            NodeType type = nextNode.type;
+            NodeType nextType = nextNode.type;
 
             // 목표 지점 설정
             Vector3 targetPos = nextNode.walkTarget;
 
-            moveSpeed = (type != NodeType.Illusion) ? normalSpeed : illusionSpeed;
+            moveSpeed = (nextType != NodeType.Illusion) ? normalSpeed : illusionSpeed;
 
             while (Vector3.Distance(transform.position, targetPos) > 0.05f)
             {
@@ -92,6 +92,16 @@ public class PlayerMovement : MonoBehaviour
             }
             // 현재 위치 재설정
             currentNode = nextNode;
+
+            // 회전판, 슬라이더의 경우 자식으로 배정
+            if (currentNode.transform.parent != null)
+            {
+                transform.SetParent(currentNode.transform.parent);
+            }
+            else
+            {
+                transform.SetParent(null);
+            }
         }
         // 움직임이 종료하면 중지 상태
         isMoving = false;
