@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IllusionManager : MonoBehaviour
+public class IllusionManager : Singleton<IllusionManager>
 {
     [Header("Âø½Ã ¼³Á¤")]
     [SerializeField] private float onScreenDistance = 50.0f;
@@ -11,7 +11,7 @@ public class IllusionManager : MonoBehaviour
 
     private Node[] allNodes;
 
-    private void Awake()
+    public override void Awake()
     {
         mainCam = Camera.main;
         allNodes = FindObjectsOfType<Node>();
