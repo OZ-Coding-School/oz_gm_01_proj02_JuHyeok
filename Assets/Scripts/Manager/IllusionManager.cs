@@ -11,6 +11,12 @@ public class IllusionManager : Singleton<IllusionManager>
 
     private Node[] allNodes;
 
+    public void Init(float distance = 50.0f, int count = 2)
+    {
+        onScreenDistance = distance;
+        neighborCount = count;
+    }
+
     public override void Awake()
     {
         mainCam = Camera.main;
@@ -33,7 +39,9 @@ public class IllusionManager : Singleton<IllusionManager>
         {
             for (int j = i + 1; j < allNodes.Length; j++)
             {
-                // 거리가 일정 수치 이하, 기존에 이웃이 아닐것
+                // 거리가 일정 수치 이하,
+                // 기존에 이웃이 아니고,
+                // 길이 끊어져있으면 => 착시 이웃으로 연결
                 if (IsOverapping(allNodes[i], allNodes[j]) &&
                     !allNodes[i].neighborNodes.Contains(allNodes[j]) &&
                     allNodes[i].neighborNodes.Count < neighborCount &&
@@ -41,18 +49,18 @@ public class IllusionManager : Singleton<IllusionManager>
                 {
                     allNodes[i].illusionNeighbor = allNodes[j];
                     allNodes[j].illusionNeighbor = allNodes[i];
-
-                    Debug.Log("노드 연결");
                 }
             }
         }
     }
 
+    /// <summary>
+    /// 착시 이웃 노드 초기화
+    /// </summary>
     public void ResetIllusionPaths()
     {
         Node[] allNodes = FindObjectsOfType<Node>();
 
-        // 착시 연결 노드 초기화
         foreach (var node in allNodes)
             node.illusionNeighbor = null;
     }
