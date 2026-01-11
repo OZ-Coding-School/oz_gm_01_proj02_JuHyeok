@@ -53,6 +53,19 @@ public class Node : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 이웃 노드 또는 현재 노드가 퍼즐인지 확인
+    /// </summary>
+    /// <param name="target"> 상대 노드 </param>
+    /// <returns></returns>
+    public bool IsNearPuzzle(Node target)
+    {
+        return (this.transform.parent.name == "RotatorNodes")
+            || (target.transform.parent.name == "RotatorNodes")
+            || (this.transform.parent.name == "SliderNodes")
+            || (target.transform.parent.name == "SlicerNodes");
+    }
+
     // 노드 연결 확인 기즈모
     private void OnDrawGizmosSelected()
     {

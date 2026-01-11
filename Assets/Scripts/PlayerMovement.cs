@@ -87,8 +87,14 @@ public class PlayerMovement : MonoBehaviour
 
             // 목표 지점 설정
             Vector3 targetPos = nextNode.walkTarget;
+            // 착시 노드와 일반 노드가 붙어있는지 여부
+            bool isNearIllusion = currentNode.IsNearPuzzle(nextNode);
 
-            moveSpeed = (nextType != NodeType.Illusion) ? normalSpeed : illusionSpeed;
+            // 이동 속도 결정
+            if (currentNode.type == NodeType.Illusion || nextNode.type == NodeType.Illusion)
+                moveSpeed = isNearIllusion ? normalSpeed : illusionSpeed;
+            else
+                moveSpeed = normalSpeed;
 
             while (Vector3.Distance(transform.position, targetPos) > 0.05f)
             {
