@@ -6,12 +6,17 @@ public class PlayerMovement : MonoBehaviour
 {
     public Node currentNode;
     private float moveSpeed;
+
+    [Header("캐릭터 속도")]
     [SerializeField] private float normalSpeed = 3f;
     [SerializeField] private float illusionSpeed = 27f;
     private bool isMoving = false;
 
     // 초기 회전값
     private Quaternion initialRot;
+
+    [Header("클릭 프리팹")]
+    [SerializeField] private Indicator clickIndicator;
 
     private void Start()
     {
@@ -49,6 +54,12 @@ public class PlayerMovement : MonoBehaviour
                 // 감지된 노드가 이동 가능한 상태일 때
                 if (targetNode != null && targetNode.isWalkable)
                 {
+                    Vector3 effectPos = targetNode.walkTarget + Vector3.up * 0.05f;
+                    var click = PoolManager.Instance.GetFromPool(clickIndicator);
+
+                    click.transform.position = effectPos;
+                    click.InstantiateIndicator();
+
                     List<Node> path = PathManager.FindPath(currentNode, targetNode);
 
                     if (path != null && path.Count > 0)
