@@ -20,7 +20,7 @@ public class ObjectRotator : MonoBehaviour
 
     [Header("잠금 설정")]
     [SerializeField] private Vector3 targetPos;                       // 잠금 연출을 위한 목표 위치
-    [SerializeField] private float lockSpeed = 1f;                      // 잠금 속도
+    [SerializeField] private float lockSpeed = 1f;                    // 잠금 속도
     private Vector3 originPos;                                        // 원위치 저장 변수
 
     [Header("마테리얼")]
@@ -40,6 +40,7 @@ public class ObjectRotator : MonoBehaviour
 
     private void Start()
     {
+        illusionManager = FindObjectOfType<IllusionManager>();
         // 축에 따라 회전할 각도 설정
         Vector3 currentEuler = rotator.transform.localEulerAngles;
         _currentAngle = GetAngleFromAxis(axis, currentEuler);
@@ -68,6 +69,9 @@ public class ObjectRotator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 마우스 입력 관리
+    /// </summary>
     private void HandleInput()
     {
         if (_isCanDrag)

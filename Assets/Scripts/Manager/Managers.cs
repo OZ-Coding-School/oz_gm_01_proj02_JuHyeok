@@ -6,8 +6,9 @@ public static class Managers
 {
     // 매니저들의 부모 오브젝트
     private static GameObject _root;
-    //풀매니저
-    private static PoolManager _pool;
+    
+    private static PoolManager _pool;           // 풀매니저
+    private static IllusionManager _illusion;   // 착시매니저
 
     private static void Init()
     {
@@ -43,6 +44,15 @@ public static class Managers
         {
             CreateManager(ref _pool, "PoolManager");
             return _pool;
+        }
+    }
+
+    public static IllusionManager Illusion
+    {
+        get
+        {
+            CreateManager(ref _illusion, "IllusionManager");
+            return _illusion;
         }
     }
 }
