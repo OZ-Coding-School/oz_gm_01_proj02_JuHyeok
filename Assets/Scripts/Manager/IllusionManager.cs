@@ -20,12 +20,19 @@ public class IllusionManager : Singleton<IllusionManager>
     public override void Awake()
     {
         mainCam = Camera.main;
-        allNodes = FindObjectsOfType<Node>();
     }
 
     private void Start()
     {
         Debug.Log($"{Vector3.Distance(new Vector3(1.5f, 0f, 0.5f), new Vector3(-3.5f, 6f, -5.5f))}");
+    }
+
+    /// <summary>
+    /// 노드 리스트 갱신
+    /// </summary>
+    public void NodeInit()
+    {
+        allNodes = FindObjectsOfType<Node>();
     }
 
     /// <summary>
