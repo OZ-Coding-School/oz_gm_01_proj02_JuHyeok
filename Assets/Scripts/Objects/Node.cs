@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum NodeType { Normal, Illusion }
+public enum NodeType { Normal, Illusion, Goal }
+public enum NodeShape { Cube, Stair }
 
 public class Node : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class Node : MonoBehaviour
     public bool isWalkable = true;
     public float stepCost = 1f;
     public NodeType type = NodeType.Normal;
+    public NodeShape shape = NodeShape.Cube;
 
     [Header("노드 연결")]
     public List<Node> neighborNodes = new List<Node>();
@@ -19,8 +21,10 @@ public class Node : MonoBehaviour
     [HideInInspector]
     public Node illusionNeighbor;           // 착시로 연결되는 노드
 
-    // 캐릭터가 설 노드 중앙값
-    public Vector3 walkTarget => transform.position + Vector3.up * 1f;
+    // 노드 모양에 따라 높이 설정
+    private float walkPoint => shape == NodeShape.Cube ? 1f : 0.5f;
+    // 캐릭터가 설 노드 위치
+    public Vector3 walkTarget => transform.position + Vector3.up * walkPoint;
 
     /// <summary>
     /// 주변 노드 탐색, 이웃 노드 리스트에 할당
@@ -58,12 +62,9 @@ public class Node : MonoBehaviour
     /// </summary>
     /// <param name="target"> 상대 노드 </param>
     /// <returns></returns>
-    public bool IsNearPuzzle(Node target)
+    public bool IsSamePosY(Node target)
     {
-        return (this.transform.parent.name == "RotatorNodes")
-            || (target.transform.parent.name == "RotatorNodes")
-            || (this.transform.parent.name == "SliderNodes")
-            || (target.transform.parent.name == "SlicerNodes");
+        return (this.transform.position.y == target.transform.position.y);
     }
 
     // 노드 연결 확인 기즈모
