@@ -17,6 +17,11 @@ public class GameManager : Singleton<GameManager>
         transform.SetParent(GameObject.Find("@Managers").transform);
     }
 
+    public void StageClear()
+    {
+        Debug.Log("스테이지 클리어");
+    }
+
     public void ExitGame()
     {
 #if UNITY_EDITOR

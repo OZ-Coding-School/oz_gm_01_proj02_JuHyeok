@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("캐릭터 속도")]
     [SerializeField] private float normalSpeed = 3f;
-    [SerializeField] private float illusionSpeed = 27f;
+    [SerializeField] private float illusionSpeed;
     private bool isMoving = false;
 
     // 초기 회전값
@@ -26,6 +26,11 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         ClickToMove();
+
+        if (IsEnterGoal())
+        {
+            GameManager.Instance.StageClear();
+        }
     }
 
     private void LateUpdate()
@@ -54,7 +59,9 @@ public class PlayerMovement : MonoBehaviour
                 // 감지된 노드가 이동 가능한 상태일 때
                 if (targetNode != null && targetNode.isWalkable)
                 {
-                    Vector3 effectPos = targetNode.walkTarget + Vector3.up * 0.05f;
+                    Vector3 shapeVec = targetNode.shape == NodeShape.Cube ? Vector3.up * 0.05f : Vector3.up * -0.4f;
+
+                    Vector3 effectPos = targetNode.walkTarget + shapeVec;
                     var click = PoolManager.Instance.GetFromPool(clickIndicator);
 
                     click.transform.position = effectPos;
@@ -69,6 +76,12 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
+    }
+
+    /// 목적지 도착 여부
+    private bool IsEnterGoal()
+    {
+        return currentNode.type == NodeType.Goal;
     }
 
     /// <summary>
@@ -87,14 +100,13 @@ public class PlayerMovement : MonoBehaviour
 
             // 목표 지점 설정
             Vector3 targetPos = nextNode.walkTarget;
-            // 착시 노드와 일반 노드가 붙어있는지 여부
-            bool isNearIllusion = currentNode.IsNearPuzzle(nextNode);
+            // 착시 판단
+            bool isNearIllusion = currentNode.IsSamePosY(nextNode);
+
+            illusionSpeed = normalSpeed * Vector3.Distance(currentNode.transform.position, targetPos);
 
             // 이동 속도 결정
-            if (currentNode.type == NodeType.Illusion || nextNode.type == NodeType.Illusion)
-                moveSpeed = isNearIllusion ? normalSpeed : illusionSpeed;
-            else
-                moveSpeed = normalSpeed;
+            moveSpeed = isNearIllusion ? normalSpeed : illusionSpeed;
 
             while (Vector3.Distance(transform.position, targetPos) > 0.05f)
             {
