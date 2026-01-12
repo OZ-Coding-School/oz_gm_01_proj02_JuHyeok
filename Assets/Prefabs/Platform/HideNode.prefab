@@ -49,6 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isWalkable: 1
   stepCost: 1
+  type: 1
+  shape: 0
   neighborNodes:
   - {fileID: 0}
   scanDistance: 1.05
