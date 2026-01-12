@@ -10,6 +10,7 @@ public class StageManager : MonoBehaviour
         Node[] allNodes = FindObjectsOfType<Node>();
         foreach(Node node in allNodes)
         {
+            node.ClearNeighbors();
             node.ScanNeighbors();
         }
     }

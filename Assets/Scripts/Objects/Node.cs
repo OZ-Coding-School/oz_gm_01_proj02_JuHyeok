@@ -16,9 +16,9 @@ public class Node : MonoBehaviour
 
     [Header("노드 연결")]
     public List<Node> neighborNodes = new List<Node>();
-    public float scanDistance = 1.05f;
+    public float scanDistance = 1.02f;
 
-    [HideInInspector]
+    //[HideInInspector]
     public Node illusionNeighbor;           // 착시로 연결되는 노드
 
     // 노드 모양에 따라 높이 설정
@@ -45,7 +45,7 @@ public class Node : MonoBehaviour
 
         foreach (Vector3 dir in directions)
         {
-            if (Physics.Raycast(transform.position + Vector3.up * 0.5f, dir, out RaycastHit hit, scanDistance))
+            if (Physics.Raycast(transform.GetChild(0).position, dir, out RaycastHit hit, scanDistance))
             {
                 Node neighborNode = hit.collider.GetComponent<Node>();
 
@@ -57,6 +57,12 @@ public class Node : MonoBehaviour
             }
         }
     }
+
+    public void ClearNeighbors()
+    {
+        neighborNodes.Clear();
+    }
+
 
     /// <summary>
     /// 이웃 노드 또는 현재 노드가 퍼즐인지 확인
