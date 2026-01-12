@@ -51,7 +51,8 @@ public class Node : MonoBehaviour
 
                 if (neighborNode != null && neighborNode != this)
                 {
-                    neighborNodes.Add(neighborNode);
+                    if (neighborNode.isWalkable)
+                        neighborNodes.Add(neighborNode);
                 }
             }
         }
