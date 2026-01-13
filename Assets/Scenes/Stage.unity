@@ -1035,7 +1035,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3697573858134608854, guid: 3933f33108e13d74583dc7636d83b1fb, type: 3}
       propertyPath: isWalkable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5043001637030464134, guid: 3933f33108e13d74583dc7636d83b1fb, type: 3}
       propertyPath: m_LocalPosition.x
