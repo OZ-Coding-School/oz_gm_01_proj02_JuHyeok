@@ -9,6 +9,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Transform stageRoot;                 // 스테이지가 생성될 부모 오브젝트
     [SerializeField] private int currentStageIndex = 0;           // 스테이지 인덱스
 
+    [Header("배경 설정")]
+    [SerializeField] private Renderer backQuad;                   // 배경
+    [SerializeField] private List<Material> backMats;             // 스테이지별 배경 마테리얼
+
     [Header("플레이어 인풋")]
     [SerializeField] private PlayerMovement player;
 
