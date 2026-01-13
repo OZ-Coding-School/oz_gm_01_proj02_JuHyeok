@@ -16,10 +16,11 @@ public class Node : MonoBehaviour
 
     [Header("노드 연결")]
     public List<Node> neighborNodes = new List<Node>();
-    public float scanDistance = 1.02f;
+    public float scanDistance = 1.6f;
 
     //[HideInInspector]
     public Node illusionNeighbor;           // 착시로 연결되는 노드
+    private Vector3 startRayPoint;
 
     // 노드 모양에 따라 높이 설정
     private float walkPoint => shape == NodeShape.Cube ? 1f : 0.5f;
@@ -40,19 +41,40 @@ public class Node : MonoBehaviour
             Vector3.left, 
             Vector3.right, 
             Vector3.forward, 
-            Vector3.back 
+            Vector3.back,
+            (Vector3.forward + Vector3.up).normalized,
+            (Vector3.forward + Vector3.down).normalized,
+            (Vector3.back + Vector3.up).normalized,
+            (Vector3.back + Vector3.down).normalized,
+            (Vector3.left + Vector3.up).normalized,
+            (Vector3.left + Vector3.down).normalized,
+            (Vector3.right + Vector3.up).normalized,
+            (Vector3.right + Vector3.down).normalized
         };
+
+        switch(shape)
+        {
+            case NodeShape.Cube:
+                startRayPoint = transform.GetChild(0).position;
+                break;
+            case NodeShape.Stair:
+                startRayPoint = transform.position + Vector3.down * 0.3f;
+                break;
+        }
 
         foreach (Vector3 dir in directions)
         {
-            if (Physics.Raycast(transform.GetChild(0).position, dir, out RaycastHit hit, scanDistance))
+            if (Physics.Raycast(startRayPoint, dir, out RaycastHit hit, scanDistance))
             {
                 Node neighborNode = hit.collider.GetComponent<Node>();
 
                 if (neighborNode != null && neighborNode != this)
                 {
-                    if (neighborNode.isWalkable)
-                        neighborNodes.Add(neighborNode);
+                    if (!neighborNodes.Contains(neighborNode))
+                    {
+                        if (neighborNode.isWalkable)
+                            neighborNodes.Add(neighborNode);
+                    }
                 }
             }
         }
