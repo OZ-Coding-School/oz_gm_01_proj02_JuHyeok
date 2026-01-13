@@ -51,7 +51,7 @@ MonoBehaviour:
   type: 0
   shape: 1
   neighborNodes: []
-  scanDistance: 1.05
+  scanDistance: 1.5
   illusionNeighbor: {fileID: 0}
 --- !u!65 &7597041593035553505
 BoxCollider:
