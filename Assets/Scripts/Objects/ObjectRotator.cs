@@ -49,6 +49,7 @@ public class ObjectRotator : MonoBehaviour
         _targetRotation = rotator.transform.localRotation;
 
         originPos = this.transform.position;
+        targetPos = SetHandleTargetPos();
     }
 
     private void Update()
@@ -127,7 +128,7 @@ public class ObjectRotator : MonoBehaviour
         else if (axis == RotationAxis.Y)    // y축을 회전시킬 때
         {
             float mouseX = Input.GetAxis("Mouse X") * sensitivity;
-            _currentAngle += mouseX;
+            _currentAngle -= mouseX;
         }
         else if (axis == RotationAxis.Z)    // z축을 회전시킬 때
         {
@@ -159,6 +160,17 @@ public class ObjectRotator : MonoBehaviour
             {
                 illusionManager.UpdateIllusionPaths();
             }
+        }
+    }
+
+    private Vector3 SetHandleTargetPos()
+    {
+        switch(axis)
+        {
+            case RotationAxis.X: return originPos - new Vector3(0.5f, 0f, 0f);
+            case RotationAxis.Y: return originPos - new Vector3(0f, 0.5f, 0f);
+            case RotationAxis.Z: return originPos - new Vector3(0f, 0f, 0.5f);
+            default: return Vector3.zero;
         }
     }
 
