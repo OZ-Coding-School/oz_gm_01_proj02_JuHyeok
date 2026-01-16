@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : Singleton<LevelManager>
 {
     [Header("스테이지 설정")]
     [SerializeField] private List<GameObject> stagePrefabs;       // 스테이지 프리팹 리스트
     [SerializeField] private Transform stageRoot;                 // 스테이지가 생성될 부모 오브젝트
-    [SerializeField] private int currentStageIndex = 0;           // 스테이지 인덱스
-    private int nodeCount;                                        // 스테이지별 노드 연결 최대치
+    public int currentStageIndex = 0;                             // 스테이지 인덱스
+    public int nodeCount;                                         // 스테이지별 노드 연결 최대치
     [SerializeField] private int checkIndex;                      // 스테이지 확인용 인덱스
 
     [Header("배경 설정")]
@@ -27,11 +27,15 @@ public class LevelManager : MonoBehaviour
 
     public void LoadStage(int index)
     {
+        if (index > stagePrefabs.Count) return;
+
         StartCoroutine(StageTransition(index));
     }
 
     private IEnumerator StageTransition(int index)
     {
+        player.transform.SetParent(null);
+
         // 스테이지가 null이 아니면 파괴
         if (_currentStageObject != null)
         {
@@ -55,11 +59,11 @@ public class LevelManager : MonoBehaviour
             player.transform.SetParent(startNode.transform.parent);
         }
 
-        // 전체 노드 이웃 설정
-        FindObjectOfType<StageManager>().ScanAll();
         // 착시 매니저 노드 리스트 갱신
         IllusionManager.Instance.Init(50.0f, nodeCount);
         IllusionManager.Instance.NodeInit();
+        // 전체 노드 이웃 설정
+        FindObjectOfType<StageManager>().ScanAll();
         // 착시 매니저 경로 설정
         FindObjectOfType<IllusionManager>().UpdateIllusionPaths();
 

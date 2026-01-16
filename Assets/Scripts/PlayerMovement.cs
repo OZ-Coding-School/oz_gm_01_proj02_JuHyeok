@@ -114,6 +114,13 @@ public class PlayerMovement : MonoBehaviour
         }
         // 움직임이 종료하면 중지 상태
         isMoving = false;
+
+        if (IsEnterGoal())
+        {
+            LevelManager levelManager = LevelManager.Instance;
+
+            levelManager.LoadStage(levelManager.currentStageIndex + 1);
+        }
     }
     /// <summary>
     /// 다음 노드로 이동
