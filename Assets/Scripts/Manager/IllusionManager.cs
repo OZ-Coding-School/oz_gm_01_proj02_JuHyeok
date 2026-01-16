@@ -50,7 +50,8 @@ public class IllusionManager : Singleton<IllusionManager>
                 // 거리가 일정 수치 이하,
                 // 기존에 이웃이 아니고,
                 // 길이 끊어져있으면 => 착시 이웃으로 연결
-                if (IsOverapping(allNodes[i], allNodes[j]) &&
+                if (allNodes[i] != allNodes[j] &&
+                    IsOverapping(allNodes[i], allNodes[j]) &&
                     !allNodes[i].neighborNodes.Contains(allNodes[j]) &&
                     allNodes[i].neighborNodes.Count < neighborCount &&
                     allNodes[j].neighborNodes.Count < neighborCount)
