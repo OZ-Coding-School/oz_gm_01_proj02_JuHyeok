@@ -19,7 +19,7 @@ public class GameManager : Singleton<GameManager>
 
     public void StageClear()
     {
-        Debug.Log("스테이지 클리어");
+        Debug.Log($"스테이지 클리어");
     }
 
     public void ExitGame()
@@ -31,15 +31,10 @@ public class GameManager : Singleton<GameManager>
 #endif
     }
 
-    public void SetPool()
-    {
-        Managers.Pool.CreatePool(IndicatorPrefab, 5);
-    }
+    public void SetPool() => Managers.Pool.CreatePool(IndicatorPrefab, 5);
 
-    public void RemovePool()
-    {
-        Managers.Pool.RemovePool(IndicatorPrefab);
-    }
+    public void RemovePool() => Managers.Pool.RemovePool(IndicatorPrefab);
+    
 
     public void SetIllusion(float distance = 50.0f, int count = 2)
     {
