@@ -173,7 +173,7 @@ public class ObjectRotator : MonoBehaviour
         {
             case RotationAxis.X: return originPos - new Vector3(0.5f, 0f, 0f);
             case RotationAxis.Y: return originPos - new Vector3(0f, 0.5f, 0f);
-            case RotationAxis.Z: return originPos - new Vector3(0f, 0f, 0.5f);
+            case RotationAxis.Z: return originPos + new Vector3(0f, 0f, 0.5f);
             default: return Vector3.zero;
         }
     }
