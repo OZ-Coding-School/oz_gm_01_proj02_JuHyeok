@@ -73,10 +73,12 @@ public class Node : MonoBehaviour
                 {
                     // 이미 발견된 노드가 아니고,
                     // 이동 가능한 노드이며,
-                    // 같은 부모를 지니고 있을 때
+                    // 같은 부모를 지니고 있고,
+                    // 한계 노드 숫자보다 이웃이 적을 때
                     if (!neighborNodes.Contains(neighborNode) &&
                         neighborNode.isWalkable &&
-                        transform.parent == neighborNode.transform.parent)
+                        transform.parent == neighborNode.transform.parent &&
+                        LevelManager.Instance.nodeCount > neighborNodes.Count)
                     {
                         neighborNodes.Add(neighborNode);
                     }
