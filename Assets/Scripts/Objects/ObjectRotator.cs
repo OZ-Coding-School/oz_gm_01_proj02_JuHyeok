@@ -19,9 +19,10 @@ public class ObjectRotator : MonoBehaviour
     [SerializeField] private float snapSpeed = 1f;                      // 보간 속도
 
     [Header("잠금 설정")]
-    [SerializeField] private Vector3 targetPos;                       // 잠금 연출을 위한 목표 위치
-    [SerializeField] private float lockSpeed = 1f;                    // 잠금 속도
-    private Vector3 originPos;                                        // 원위치 저장 변수
+    public Vector3 targetPos;                                           // 잠금 연출을 위한 목표 위치
+    [SerializeField] private float lockSpeed = 1f;                      // 잠금 속도
+    [SerializeField] private bool rotatorLock = true;                   // 캐릭터 위치 시 잠금 여부
+    public Vector3 originPos;                                           // 원위치 저장 변수
 
     [Header("마테리얼")]
     [SerializeField] private Material enterMat;
@@ -48,7 +49,7 @@ public class ObjectRotator : MonoBehaviour
         // 목표 각도 초기화
         _targetRotation = rotator.transform.localRotation;
 
-        originPos = this.transform.position;
+        originPos = this.transform.localPosition;
         targetPos = SetHandleTargetPos();
     }
 
@@ -58,7 +59,10 @@ public class ObjectRotator : MonoBehaviour
 
         Vector3 targetposition = IsCharacterOnRotator() ? targetPos : originPos;
 
-        transform.position = Vector3.Lerp(transform.position, targetposition, lockSpeed * Time.deltaTime);
+        transform.localPosition = Vector3.Lerp(
+            transform.localPosition,
+            targetposition,
+            lockSpeed * Time.deltaTime);
 
         if (_isDragging)
         {
@@ -80,7 +84,7 @@ public class ObjectRotator : MonoBehaviour
             // 마우스 입력 시작
             if (Input.GetMouseButtonDown(0))
             {
-                if (IsCharacterOnRotator() && axis == RotationAxis.Z) return;
+                if (IsCharacterOnRotator() && rotatorLock) return;
 
                 _isDragging = true;
 
@@ -163,7 +167,7 @@ public class ObjectRotator : MonoBehaviour
         }
     }
 
-    private Vector3 SetHandleTargetPos()
+    public Vector3 SetHandleTargetPos()
     {
         switch(axis)
         {

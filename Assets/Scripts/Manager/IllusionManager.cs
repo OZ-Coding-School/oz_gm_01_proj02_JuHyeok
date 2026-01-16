@@ -6,7 +6,7 @@ public class IllusionManager : Singleton<IllusionManager>
 {
     [Header("착시 설정")]
     [SerializeField] private float onScreenDistance = 50.0f;
-    [SerializeField] private int neighborCount = 2;
+    public int neighborCount = 2;
     private Camera mainCam;
 
     private Node[] allNodes;
@@ -30,6 +30,7 @@ public class IllusionManager : Singleton<IllusionManager>
     /// <summary>
     /// 노드 리스트 갱신
     /// </summary>
+    [ContextMenu("RefreshNodeList")]
     public void NodeInit()
     {
         allNodes = FindObjectsOfType<Node>();
@@ -56,6 +57,15 @@ public class IllusionManager : Singleton<IllusionManager>
                 {
                     allNodes[i].illusionNeighbor = allNodes[j];
                     allNodes[j].illusionNeighbor = allNodes[i];
+                }
+            }
+
+            if (allNodes[i].neighborNodes != null)
+            {
+                foreach (var node in allNodes[i].neighborNodes)
+                {
+                    if (node.neighborNodes.Contains(allNodes[i].illusionNeighbor))
+                        allNodes[i].illusionNeighbor = null;
                 }
             }
         }

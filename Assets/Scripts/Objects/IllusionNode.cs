@@ -9,11 +9,11 @@ public class IllusionNode : MonoBehaviour
         connectNeighbor();
     }
 
-    private void connectNeighbor()
+    public void connectNeighbor()
     {
         Node neighbor = transform.parent.GetChild(0).Find("TransitionNode").GetComponent<Node>();
 
-        if (neighbor != null)
+        if (neighbor != null && !GetComponent<Node>().neighborNodes.Contains(neighbor))
         {
             neighbor.neighborNodes.Add(this.GetComponent<Node>());
             GetComponent<Node>().neighborNodes.Add(neighbor);

@@ -34,25 +34,25 @@ public class Node : MonoBehaviour
     public void ScanNeighbors()
     {
         neighborNodes.Clear();
+        
+        Vector3[] directions =
+        { Vector3.up,
+        Vector3.down,
+        Vector3.left,
+        Vector3.right,
+        Vector3.forward,
+        Vector3.back,
+        (Vector3.forward + Vector3.up).normalized,
+        (Vector3.forward + Vector3.down).normalized,
+        (Vector3.back + Vector3.up).normalized,
+        (Vector3.back + Vector3.down).normalized,
+        (Vector3.left + Vector3.up).normalized,
+        (Vector3.left + Vector3.down).normalized,
+        (Vector3.right + Vector3.up).normalized,
+        (Vector3.right + Vector3.down).normalized
+    };
 
-        Vector3[] directions = 
-            { Vector3.up, 
-            Vector3.down, 
-            Vector3.left, 
-            Vector3.right, 
-            Vector3.forward, 
-            Vector3.back,
-            (Vector3.forward + Vector3.up).normalized,
-            (Vector3.forward + Vector3.down).normalized,
-            (Vector3.back + Vector3.up).normalized,
-            (Vector3.back + Vector3.down).normalized,
-            (Vector3.left + Vector3.up).normalized,
-            (Vector3.left + Vector3.down).normalized,
-            (Vector3.right + Vector3.up).normalized,
-            (Vector3.right + Vector3.down).normalized
-        };
-
-        switch(shape)
+        switch (shape)
         {
             case NodeShape.Cube:
                 startRayPoint = transform.GetChild(0).position;
@@ -68,12 +68,17 @@ public class Node : MonoBehaviour
             {
                 Node neighborNode = hit.collider.GetComponent<Node>();
 
+                // 노드가 발견되지 않거나 나 자신이 아니면
                 if (neighborNode != null && neighborNode != this)
                 {
-                    if (!neighborNodes.Contains(neighborNode))
+                    // 이미 발견된 노드가 아니고,
+                    // 이동 가능한 노드이며,
+                    // 같은 부모를 지니고 있을 때
+                    if (!neighborNodes.Contains(neighborNode) &&
+                        neighborNode.isWalkable &&
+                        transform.parent == neighborNode.transform.parent)
                     {
-                        if (neighborNode.isWalkable)
-                            neighborNodes.Add(neighborNode);
+                        neighborNodes.Add(neighborNode);
                     }
                 }
             }
