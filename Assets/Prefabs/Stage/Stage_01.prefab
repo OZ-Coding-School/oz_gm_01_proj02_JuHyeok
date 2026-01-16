@@ -2444,6 +2444,8 @@ MonoBehaviour:
   snapSpeed: 5
   targetPos: {x: 0.5, y: 6.5, z: -5.5}
   lockSpeed: 5
+  rotatorLock: 1
+  originPos: {x: 0, y: 0, z: 0}
   enterMat: {fileID: 2100000, guid: afff1a74e0b47ef489281fc7e92a384b, type: 2}
   exitMat: {fileID: 2100000, guid: 04bdafa502944614db056d62f30b42ac, type: 2}
 --- !u!135 &1377252720602114349
