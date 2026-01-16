@@ -8,6 +8,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private List<GameObject> stagePrefabs;       // 스테이지 프리팹 리스트
     [SerializeField] private Transform stageRoot;                 // 스테이지가 생성될 부모 오브젝트
     [SerializeField] private int currentStageIndex = 0;           // 스테이지 인덱스
+    private int nodeCount;                                        // 스테이지별 노드 연결 최대치
+    [SerializeField] private int checkIndex;                      // 스테이지 확인용 인덱스
 
     [Header("배경 설정")]
     [SerializeField] private Renderer backQuad;                   // 배경
@@ -20,7 +22,7 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        LoadStage(0);
+        LoadStage(checkIndex);
     }
 
     public void LoadStage(int index)
@@ -36,6 +38,9 @@ public class LevelManager : MonoBehaviour
             Destroy(_currentStageObject);
             yield return null;
         }
+
+        if (index > 0)  nodeCount = 3;
+        else            nodeCount = 2;
 
         // 새 스테이지 생성
         _currentStageObject = Instantiate(stagePrefabs[index], stageRoot);
@@ -53,10 +58,12 @@ public class LevelManager : MonoBehaviour
         // 전체 노드 이웃 설정
         FindObjectOfType<StageManager>().ScanAll();
         // 착시 매니저 노드 리스트 갱신
-        FindObjectOfType<IllusionManager>().NodeInit();
+        IllusionManager.Instance.Init(50.0f, nodeCount);
+        IllusionManager.Instance.NodeInit();
         // 착시 매니저 경로 설정
         FindObjectOfType<IllusionManager>().UpdateIllusionPaths();
 
+        backQuad.material = backMats[index];
 
         currentStageIndex = index;
         Debug.Log($"스테이지{index + 1} 생성");
