@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("캐릭터 속도")]
     [SerializeField] private float normalSpeed = 3f;
     [SerializeField] private float illusionSpeed;
-    private bool isMoving = false;
+    public bool isMoving = false;
 
     // 초기 회전값
     private Quaternion initialRot;
@@ -96,29 +96,9 @@ public class PlayerMovement : MonoBehaviour
 
         foreach (Node nextNode in path)
         {
-            NodeType nextType = nextNode.type;
-
-            // 목표 지점 설정
-            Vector3 targetPos = nextNode.walkTarget;
-            // 착시 판단
-            bool isNearIllusion = currentNode.IsSamePosY(nextNode);
-
-            illusionSpeed = normalSpeed * Vector3.Distance(currentNode.transform.position, targetPos);
-
-            // 이동 속도 결정
-            moveSpeed = isNearIllusion ? normalSpeed : illusionSpeed;
-
-            while (Vector3.Distance(transform.position, targetPos) > 0.05f)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-                Vector3 direction = (targetPos - transform.position).normalized;
-
-                // 이동 방향 주시
-                if (direction != Vector3.zero)
-                    transform.forward = direction;
-
-                yield return null;
-            }
+            // 일반 이동
+            yield return StartCoroutine(MoveToNode(nextNode));
+            
             // 현재 위치 재설정
             currentNode = nextNode;
 
@@ -134,5 +114,34 @@ public class PlayerMovement : MonoBehaviour
         }
         // 움직임이 종료하면 중지 상태
         isMoving = false;
+    }
+    /// <summary>
+    /// 다음 노드로 이동
+    /// </summary>
+    /// <param name="nextNode"> 이동 목표 노드 </param>
+    /// <returns></returns>
+    private IEnumerator MoveToNode(Node nextNode)
+    {
+        // 목표 지점 설정
+        Vector3 targetPos = nextNode.walkTarget;
+        // 착시 판단
+        bool isNearIllusion = currentNode.IsSamePosY(nextNode);
+
+        illusionSpeed = normalSpeed * Vector3.Distance(currentNode.transform.position, targetPos);
+
+        // 이동 속도 결정
+        moveSpeed = isNearIllusion ? normalSpeed : illusionSpeed;
+
+        while (Vector3.Distance(transform.position, targetPos) > 0.05f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+            Vector3 direction = (targetPos - transform.position).normalized;
+
+            // 이동 방향 주시
+            if (direction != Vector3.zero)
+                transform.forward = direction;
+
+            yield return null;
+        }
     }
 }
