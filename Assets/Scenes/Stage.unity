@@ -681,7 +681,7 @@ MonoBehaviour:
   stageRoot: {fileID: 491797051}
   currentStageIndex: 0
   nodeCount: 0
-  checkIndex: 0
+  checkIndex: 1
   backQuad: {fileID: 576156369}
   backMats:
   - {fileID: 2100000, guid: 1248834616f5c784eb6e2aa5026fa32f, type: 2}

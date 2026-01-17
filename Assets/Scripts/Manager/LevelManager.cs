@@ -43,8 +43,8 @@ public class LevelManager : Singleton<LevelManager>
             yield return null;
         }
 
-        if (index > 0)  nodeCount = 3;
-        else            nodeCount = 2;
+        if (index > 0) nodeCount = 3;
+        else nodeCount = 2;
 
         // 새 스테이지 생성
         _currentStageObject = Instantiate(stagePrefabs[index], stageRoot);
