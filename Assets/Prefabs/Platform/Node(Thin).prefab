@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8008577938317485605}
   - component: {fileID: 2591607255122452303}
   m_Layer: 6
-  m_Name: Node(Thin)Prefab
+  m_Name: Node(Thin)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

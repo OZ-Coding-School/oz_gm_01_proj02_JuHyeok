@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 178331653237321698}
   - component: {fileID: 7597041593035553505}
   m_Layer: 0
-  m_Name: StairNodePrefab
+  m_Name: StairNode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
