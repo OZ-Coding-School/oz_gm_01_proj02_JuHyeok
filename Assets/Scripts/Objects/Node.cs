@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum NodeType { Normal, Illusion, Goal }
-public enum NodeShape { Cube, Stair }
+public enum NodeType { Normal, Illusion, Goal}
+public enum NodeShape { Cube, Stair, Ladder }
 
 public class Node : MonoBehaviour
 {
@@ -22,10 +22,14 @@ public class Node : MonoBehaviour
     public Node illusionNeighbor;           // 착시로 연결되는 노드
     private Vector3 startRayPoint;
 
+    private Vector3[] directions;
+
     // 노드 모양에 따라 높이 설정
     private float walkPoint => shape == NodeShape.Cube ? 1f : 0.5f;
     // 캐릭터가 설 노드 위치
-    public Vector3 walkTarget => transform.position + Vector3.up * walkPoint;
+    public Vector3 walkTarget => shape == NodeShape.Ladder ?
+        transform.GetChild(0).position + Vector3.up * 0.5f :
+        transform.position + Vector3.up * walkPoint;
 
     /// <summary>
     /// 주변 노드 탐색, 이웃 노드 리스트에 할당
@@ -34,31 +38,46 @@ public class Node : MonoBehaviour
     public void ScanNeighbors()
     {
         neighborNodes.Clear();
-        
-        Vector3[] directions =
-        { Vector3.up,
-        Vector3.down,
-        Vector3.left,
-        Vector3.right,
-        Vector3.forward,
-        Vector3.back,
-        (Vector3.forward + Vector3.up).normalized,
-        (Vector3.forward + Vector3.down).normalized,
-        (Vector3.back + Vector3.up).normalized,
-        (Vector3.back + Vector3.down).normalized,
-        (Vector3.left + Vector3.up).normalized,
-        (Vector3.left + Vector3.down).normalized,
-        (Vector3.right + Vector3.up).normalized,
-        (Vector3.right + Vector3.down).normalized
-    };
 
         switch (shape)
         {
             case NodeShape.Cube:
+                directions = new Vector3[]
+                {
+                    Vector3.up,
+                    Vector3.down,
+                    Vector3.left,
+                    Vector3.right,
+                    Vector3.forward,
+                    Vector3.back
+                };
                 startRayPoint = transform.GetChild(0).position;
                 break;
             case NodeShape.Stair:
+                directions = new Vector3[]
+                {
+                    (Vector3.forward + Vector3.up).normalized,
+                    (Vector3.forward + Vector3.down).normalized,
+                    (Vector3.back + Vector3.up).normalized,
+                    (Vector3.back + Vector3.down).normalized,
+                    (Vector3.left + Vector3.up).normalized,
+                    (Vector3.left + Vector3.down).normalized,
+                    (Vector3.right + Vector3.up).normalized,
+                    (Vector3.right + Vector3.down).normalized
+                };
                 startRayPoint = transform.position + Vector3.down * 0.3f;
+                break;
+            case NodeShape.Ladder:
+                directions = new Vector3[]
+                {
+                    Vector3.up,
+                    Vector3.down,
+                    Vector3.left,
+                    Vector3.right,
+                    Vector3.forward,
+                    Vector3.back
+                };
+                startRayPoint = transform.position;
                 break;
         }
 
@@ -91,7 +110,6 @@ public class Node : MonoBehaviour
     {
         neighborNodes.Clear();
     }
-
 
     /// <summary>
     /// 이웃 노드 또는 현재 노드가 퍼즐인지 확인
