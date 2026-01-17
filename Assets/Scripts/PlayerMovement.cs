@@ -56,8 +56,8 @@ public class PlayerMovement : MonoBehaviour
                 // 레이캐스트에 감지된 노드
                 Node targetNode = hit.collider.GetComponentInParent<Node>();
 
-                // 감지된 노드가 이동 가능한 상태일 때
-                if (targetNode != null && targetNode.isWalkable)
+                // 감지된 노드가 이동 가능한 상태일 때, 사다리 노드가 아닐 때
+                if (targetNode != null && targetNode.isWalkable && targetNode.shape != NodeShape.Ladder)
                 {
                     Vector3 shapeVec = targetNode.shape == NodeShape.Cube ? Vector3.up * 0.05f : Vector3.up * -0.4f;
 
