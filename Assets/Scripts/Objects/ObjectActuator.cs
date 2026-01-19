@@ -11,14 +11,14 @@ public class ObjectActuator : MonoBehaviour
     private Vector3 _startPosition;
     private Vector3 _destination;
 
-    private ObjectRotator rotatorHandle;
+    private Rotator rotatorHandle;
 
     private void Awake()
     {
         _startPosition = transform.localPosition;
         _destination = _startPosition;      // 贸澜浚 力磊府啊 格利瘤
 
-        rotatorHandle = GetComponentInChildren<ObjectRotator>();
+        rotatorHandle = GetComponentInChildren<Rotator>();
     }
 
     private void Update()

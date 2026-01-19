@@ -51,8 +51,7 @@ public class StageSelector : MonoBehaviour
             _targetYRotation = snapAngle;
             _currentYRotation = snapAngle; // 다음 드래그 시작점 동기화
 
-            // [선택] 클릭 판정: 드래그 거리가 매우 짧다면 해당 스테이지 선택으로 간주
-            // 여기에 Raycast를 이용해 스테이지 클릭 로직을 추가할 수 있습니다.
+            // 클릭 판정: 드래그 거리가 매우 짧다면 해당 스테이지 선택으로 간주
         }
     }
 
@@ -60,7 +59,7 @@ public class StageSelector : MonoBehaviour
     {
         if (!_isDragging)
         {
-            // 드래그가 끝나면 목표 각도로 부드럽게 회전
+            // 목표 각도로 회전
             pivot.rotation = Quaternion.Slerp(
                 pivot.rotation,
                 Quaternion.Euler(0, _targetYRotation, 0),
