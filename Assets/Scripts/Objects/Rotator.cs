@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectRotator : MonoBehaviour
+public class Rotator : MonoBehaviour
 {
     // 회전 방향 설정
     public enum RotationAxis { X, Y, Z }
 
-    public IllusionManager illusionManager;
+    private IllusionManager illusionManager;
 
     [Header("회전 대상")]
     [SerializeField] private Transform rotator;
