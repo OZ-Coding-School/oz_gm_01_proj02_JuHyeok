@@ -285,7 +285,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 30}
-  m_LocalScale: {x: 32, y: 20, z: 1}
+  m_LocalScale: {x: 40, y: 25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 963194228}
@@ -585,7 +585,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9
+  orthographic size: 11
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -678,14 +678,16 @@ MonoBehaviour:
   stagePrefabs:
   - {fileID: 8608015662640173621, guid: 245d2f423417b0f4b94c6e6bf0a66aba, type: 3}
   - {fileID: 5773262604157370990, guid: fff206d44496058479053cc153e3920b, type: 3}
+  - {fileID: 3301603541726982380, guid: 721d2426f99461347836c36f8a5d98e0, type: 3}
   stageRoot: {fileID: 491797051}
   currentStageIndex: 0
   nodeCount: 0
-  checkIndex: 1
+  checkIndex: 0
   backQuad: {fileID: 576156369}
   backMats:
   - {fileID: 2100000, guid: 1248834616f5c784eb6e2aa5026fa32f, type: 2}
   - {fileID: 2100000, guid: 72df66504bddf2c47b4f9599667733e7, type: 2}
+  - {fileID: 2100000, guid: 712349c704cb75e44b571de0df797743, type: 2}
   player: {fileID: 1434088542}
 --- !u!114 &1434088542 stripped
 MonoBehaviour:
