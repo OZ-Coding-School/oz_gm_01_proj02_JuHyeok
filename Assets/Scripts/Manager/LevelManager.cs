@@ -18,10 +18,12 @@ public class LevelManager : Singleton<LevelManager>
     [Header("플레이어 인풋")]
     [SerializeField] private PlayerMovement player;
 
+    private Camera _camera;
     private GameObject _currentStageObject;
 
     private void Start()
     {
+        _camera = Camera.main;
         LoadStage(checkIndex);
     }
 
@@ -35,6 +37,8 @@ public class LevelManager : Singleton<LevelManager>
     private IEnumerator StageTransition(int index)
     {
         player.transform.SetParent(null);
+
+        _camera.orthographicSize = index + 9;
 
         // 스테이지가 null이 아니면 파괴
         if (_currentStageObject != null)
