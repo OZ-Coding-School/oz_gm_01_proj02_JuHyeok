@@ -54,7 +54,8 @@ public class IllusionManager : Singleton<IllusionManager>
                     IsOverapping(allNodes[i], allNodes[j]) &&
                     !allNodes[i].neighborNodes.Contains(allNodes[j]) &&
                     allNodes[i].neighborNodes.Count < neighborCount &&
-                    allNodes[j].neighborNodes.Count < neighborCount)
+                    allNodes[j].neighborNodes.Count < neighborCount &&
+                    allNodes[i].isWalkable && allNodes[j].isWalkable)
                 {
                     allNodes[i].illusionNeighbor = allNodes[j];
                     allNodes[j].illusionNeighbor = allNodes[i];
