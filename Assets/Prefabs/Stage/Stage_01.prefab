@@ -2436,7 +2436,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c754614b10571f4a82588787ec11387, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  illusionManager: {fileID: 0}
   rotator: {fileID: 7416900324910837407}
   axis: 2
   sensitivity: 1
@@ -2987,7 +2986,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8809329813603423514, guid: 8424ce007e1e4e64fb58614836d5b17a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.5
+      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 8809329813603423514, guid: 8424ce007e1e4e64fb58614836d5b17a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3545,7 +3544,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8809329813603423514, guid: 8424ce007e1e4e64fb58614836d5b17a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 9.5
+      value: 8.5
       objectReference: {fileID: 0}
     - target: {fileID: 8809329813603423514, guid: 8424ce007e1e4e64fb58614836d5b17a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4622,7 +4621,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8809329813603423514, guid: 8424ce007e1e4e64fb58614836d5b17a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.5
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 8809329813603423514, guid: 8424ce007e1e4e64fb58614836d5b17a, type: 3}
       propertyPath: m_LocalPosition.z
