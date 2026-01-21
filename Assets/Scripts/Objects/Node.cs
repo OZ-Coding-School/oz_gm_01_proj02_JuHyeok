@@ -25,7 +25,7 @@ public class Node : MonoBehaviour
     private Vector3[] directions;
 
     // 노드 모양에 따라 높이 설정
-    private float walkPoint => shape == NodeShape.Cube ? 1f : 0.5f;
+    private float walkPoint => shape == NodeShape.Cube ? 1f : 1f;
     // 캐릭터가 설 노드 위치
     public Vector3 walkTarget => shape == NodeShape.Ladder ?
         transform.GetChild(0).position + Vector3.up * 0.5f :
@@ -65,7 +65,7 @@ public class Node : MonoBehaviour
                     (Vector3.right + Vector3.up).normalized,
                     (Vector3.right + Vector3.down).normalized
                 };
-                startRayPoint = transform.position + Vector3.down * 0.3f;
+                startRayPoint = transform.position + Vector3.up * 0.5f;
                 break;
             case NodeShape.Ladder:
                 directions = new Vector3[]
