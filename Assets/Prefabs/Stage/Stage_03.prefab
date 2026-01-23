@@ -978,7 +978,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetLocalPosition: {x: 0, y: -2.5, z: 0}
-  moveSpeed: 4
+  moveSpeed: 6
 --- !u!1 &3661104945289767017
 GameObject:
   m_ObjectHideFlags: 0
@@ -5737,6 +5737,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4867804860840787714}
     m_Modifications:
+    - target: {fileID: 708157640666931652, guid: 92a7ec45202b2c04fb044ec7d5b5c7c2, type: 3}
+      propertyPath: type
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5243431844805086476, guid: 92a7ec45202b2c04fb044ec7d5b5c7c2, type: 3}
       propertyPath: m_Name
       value: GoalNode
