@@ -6,9 +6,15 @@ public static class Managers
 {
     // 매니저들의 부모 오브젝트
     private static GameObject _root;
-    
+
+    // 셀렉트 씬
+    private static GameManager _game;
+    private static StageManager _stage;
+
+    // 스테이지 씬
     private static PoolManager _pool;           // 풀매니저
     private static IllusionManager _illusion;   // 착시매니저
+    private static TutorialManager _tutorial;   // 튜토리얼 매니저
 
     private static void Init()
     {
@@ -37,6 +43,24 @@ public static class Managers
         }
     }
 
+    // 게임 매니저 접근자
+    public static GameManager game
+    {
+        get
+        {
+            CreateManager(ref _game, "GameManager");
+            return _game;
+        }
+    }
+    // 스테이지 매니저 접근자
+    public static StageManager stage
+    {
+        get
+        {
+            CreateManager(ref _stage, "StageManager");
+            return _stage;
+        }
+    }    
     // 풀 매니저 접근자
     public static PoolManager Pool
     {
@@ -46,13 +70,22 @@ public static class Managers
             return _pool;
         }
     }
-
+    // 착시 매니저 접근자
     public static IllusionManager Illusion
     {
         get
         {
             CreateManager(ref _illusion, "IllusionManager");
             return _illusion;
+        }
+    }
+    // 튜토리얼 매니저 접근자
+    public static TutorialManager Tutorial
+    {
+        get
+        {
+            CreateManager(ref _tutorial, "TutorialManager");
+            return _tutorial;
         }
     }
 }
