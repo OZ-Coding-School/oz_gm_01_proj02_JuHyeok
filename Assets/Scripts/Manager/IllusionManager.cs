@@ -1,30 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class IllusionManager : Singleton<IllusionManager>
 {
     [Header("착시 설정")]
     [SerializeField] private float onScreenDistance = 50.0f;
     public int neighborCount = 2;
-    private Camera mainCam;
+    private Camera _mainCam;
 
     private Node[] allNodes;
 
+    // 설정 초기화
     public void Init(float distance = 50.0f, int count = 2)
     {
+        _mainCam = Camera.main;
+
         onScreenDistance = distance;
         neighborCount = count;
-    }
-
-    public override void Awake()
-    {
-        mainCam = Camera.main;
-    }
-
-    private void Start()
-    {
-        Debug.Log($"{Vector3.Distance(new Vector3(1.5f, 0f, 0.5f), new Vector3(-3.5f, 6f, -5.5f))}");
     }
 
     /// <summary>
@@ -41,6 +35,7 @@ public class IllusionManager : Singleton<IllusionManager>
     /// </summary>
     public void UpdateIllusionPaths()
     {
+        StartCoroutine(StopBeforeFindCam());
         ResetIllusionPaths();
 
         for (int i = 0; i < allNodes.Length; i++)
@@ -92,12 +87,17 @@ public class IllusionManager : Singleton<IllusionManager>
     /// <returns> true or false </returns>
     private bool IsOverapping(Node a, Node b)
     {
-        Vector3 screenPosA = mainCam.WorldToScreenPoint(a.transform.position);
-        Vector3 screenPosB = mainCam.WorldToScreenPoint(b.transform.position);
+        Vector3 screenPosA = _mainCam.WorldToScreenPoint(a.transform.position);
+        Vector3 screenPosB = _mainCam.WorldToScreenPoint(b.transform.position);
 
         screenPosA.z = 0;
         screenPosB.z = 0;
 
         return Vector3.Distance(screenPosA, screenPosB) < onScreenDistance;
+    }
+
+    private IEnumerator StopBeforeFindCam()
+    {
+        if (_mainCam == null) yield return null;
     }
 }

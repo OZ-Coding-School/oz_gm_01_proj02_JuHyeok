@@ -8,18 +8,44 @@ public class GameManager : Singleton<GameManager>
     // 클릭 프리팹
     public Indicator IndicatorPrefab;
 
-    public override void Awake()
+    private void OnEnable()
     {
-        SetPool();
-        SetIllusion();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnLoaded;
+    }
 
-        gameObject.AddComponent<StageManager>();
-        transform.SetParent(GameObject.Find("@Managers").transform);
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Stage")
+        {
+            SetPool();
+            SetIllusion();
+        }
+
+        if (scene.name == "Select")
+        {
+            StageFlat[] flats = FindObjectsOfType<StageFlat>();
+
+            foreach (var flat in flats)
+            {
+                flat.RefreshStatus();
+            }
+        }
+    }
+
+    private void OnSceneUnLoaded(Scene scene)
+    {
+        if (scene.name == "Stage")
+        {
+            RemovePool();
+        }
     }
 
     public void StageClear()
     {
-        Debug.Log($"스테이지 클리어");
+        // 클리어 연출 코루틴
+
+        SceneManager.LoadScene("Select");
     }
 
     public void ExitGame()
@@ -40,4 +66,5 @@ public class GameManager : Singleton<GameManager>
     {
         Managers.Illusion.Init(distance, count);
     }
+
 }
