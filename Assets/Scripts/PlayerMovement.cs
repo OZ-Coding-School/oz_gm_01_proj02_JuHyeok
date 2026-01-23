@@ -27,10 +27,6 @@ public class PlayerMovement : MonoBehaviour
     {
         ClickToMove();
 
-        if (IsEnterGoal())
-        {
-            GameManager.Instance.StageClear();
-        }
     }
 
     private void LateUpdate()
@@ -91,6 +87,9 @@ public class PlayerMovement : MonoBehaviour
     /// <returns></returns>
     private IEnumerator FollowPath(List<Node> path)
     {
+        if (TutorialManager.Instance != null)
+            TutorialManager.Instance.OnPlayerAction();
+
         // 움직이는 상태
         isMoving = true;
 
@@ -117,9 +116,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (IsEnterGoal())
         {
-            LevelManager levelManager = LevelManager.Instance;
-
-            levelManager.LoadStage(levelManager.currentStageIndex + 1);
+            GameManager.Instance.StageClear();
+            LevelManager.Instance.ClearStage();
         }
     }
     /// <summary>
