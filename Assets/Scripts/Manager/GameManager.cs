@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : Singleton<GameManager>
 {
     // 클릭 프리팹
     public Indicator IndicatorPrefab;
+
+    private Button exitButton;
 
     private void OnEnable()
     {
@@ -30,6 +33,11 @@ public class GameManager : Singleton<GameManager>
             {
                 flat.RefreshStatus();
             }
+
+            // 게임 종료 버튼 이벤트 할당
+            exitButton = FindObjectOfType<Button>();
+
+            exitButton.onClick.AddListener(ExitGame);
         }
     }
 
