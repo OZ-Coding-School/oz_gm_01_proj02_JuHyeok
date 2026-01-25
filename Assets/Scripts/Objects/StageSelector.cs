@@ -108,7 +108,7 @@ public class StageSelector : MonoBehaviour
                 if (flat.stageIndex <= maxCleared)
                 {
                     PlayerPrefs.SetInt("SelectedStage", flat.stageIndex);
-                    SceneManager.LoadScene("Stage");
+                    LoadManager.Instance.LoadScene("Stage");
                 }
                 else
                 {
@@ -117,4 +117,6 @@ public class StageSelector : MonoBehaviour
             }
         }
     }
+
+
 }

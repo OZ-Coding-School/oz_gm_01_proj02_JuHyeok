@@ -53,7 +53,7 @@ public class GameManager : Singleton<GameManager>
     {
         // 클리어 연출 코루틴
 
-        SceneManager.LoadScene("Select");
+        LoadManager.Instance.LoadScene("Select");
     }
 
     public void ExitGame()
