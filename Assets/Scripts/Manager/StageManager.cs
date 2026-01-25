@@ -12,6 +12,10 @@ public class StageManager : Singleton<StageManager>
         foreach(Node node in allNodes)
         {
             node.ClearNeighbors();
+            if (node.type == NodeType.Illusion)
+            {
+                node.GetComponent<IllusionNode>().connectNeighbor();
+            }
             node.ScanNeighbors();
         }
     }
