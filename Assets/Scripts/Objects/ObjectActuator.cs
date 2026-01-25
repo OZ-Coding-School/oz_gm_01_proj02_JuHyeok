@@ -54,11 +54,9 @@ public class ObjectActuator : MonoBehaviour
     // 이동 완료
     private void OnMovementComplete()
     {
-        Debug.Log($"{gameObject.name} 이동 완료!");
-
         // 노드 연결 재계산
-        if (FindObjectOfType<StageManager>() != null)
-            FindObjectOfType<StageManager>().ScanAll();
+        //if (FindObjectOfType<StageManager>() != null)
+        //    FindObjectOfType<StageManager>().ScanAll();
         // 착시 노드 연결 재계산
         if (IllusionManager.Instance != null)
             IllusionManager.Instance.UpdateIllusionPaths();

@@ -63,7 +63,6 @@ public class LevelManager : Singleton<LevelManager>
         if (index > stagePrefabs.Count) return;
 
         StartCoroutine(StageTransition(index));
-        Debug.Log("스테이지 호출");
     }
 
     public void ClearStage()
@@ -130,7 +129,6 @@ public class LevelManager : Singleton<LevelManager>
         backQuad.material = backMats[index];
 
         currentStageIndex = index;
-        Debug.Log($"스테이지{index + 1} 생성");
 
         yield return null;
 
